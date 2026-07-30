@@ -41,7 +41,7 @@ export default function App() {
   const [specialNotes, setSpecialNotes] = useState('Ubah wajah dari Foto Target persis ke dalam gaya ilustrasi Vektor');
   
   // OUTPUT & LOADING
-  const [outputResult, setOutputResult] = useState('Hasil JSON prompt akan muncul di sini...');
+  const [outputResult, setOutputResult] = useState('Hasil prompt dan instruksi akan muncul di sini...');
   const [isLoading, setIsLoading] = useState(false);
 
   // Handler Upload Foto Target (Wajah Asli)
@@ -102,11 +102,11 @@ export default function App() {
 
     const systemInstruction = isVectorPortrait ? `
 You are an expert Image-to-Prompt Converter and Senior Vector Illustrator. 
-Your task is to analyze the uploaded images and output a precise, professional English JSON prompt for an AI image generator (like Midjourney / Stable Diffusion / Imagen).
+Your task is to analyze the uploaded images and output a clean, highly descriptive text prompt in English for an AI image generator, optimized to work alongside a single attached target photo.
 
-CRITICAL IMAGE MAPPING RULES:
-1. IMAGE 1 (THE TARGET SUBJECT): This is the absolute source of truth for the human face, facial bone structure, eyes, nose, lips, expression, and unique features. You MUST instruct the generator to preserve this exact person's face.
-2. IMAGE 2 (THE STYLE REFERENCE): Use this ONLY for the vector art style, line art thickness, shading style, and color grading aesthetic. Do NOT use the face from Image 2.
+CRITICAL RULES:
+1. Write a cohesive, powerful text prompt that describes the exact subject details, facial features from the target photo, clothing, color palette, background, and vector art style.
+2. Provide clear instructions on how the user should use the final prompt with their target photo.
 
 [USER INPUT DATA]
 - Background Style: ${backgroundStyle}
@@ -117,24 +117,15 @@ CRITICAL IMAGE MAPPING RULES:
 - Theme Style: ${themeStyle}
 - Special Notes: ${specialNotes}
 
-Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
-{
-  "task": "Transform the user's uploaded real selfie photo into a high-end vector portrait illustration",
-  "subject_description": "An Indonesian adult woman with a round facial structure, warm brown skin tone, expressive dark brown eyes, a well-defined nose, full lips with natural pink lipstick, wearing a dark black hijab covering her hair and neck tightly, gentle and calm facial expression, angled selfie perspective.",
-  "art_style_transfer": "Apply a clean flat vector art illustration style, Adobe Illustrator aesthetic, smooth vector gradient skin shading, clean sharp outlines, and stylized minimalist eye highlights.",
-  "composition": "Single centered subject portrait, looking slightly upwards toward the camera, clean vector format, no extra people, no grids, no collage, no text.",
-  "background": "Solid Pastel Pink Background",
-  "orientation": "Portrait",
-  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready 300 DPI",
-  "negative_prompt": "baby, child, second person, multiple subjects, grid, collage, text, watermark, photo realism, 3D render, rough lines, noisy textures"
-}
+Generate the response in two distinct sections:
+### 1. READY-TO-USE TEXT PROMPT
+(Provide the descriptive prompt paragraph/JSON optimized for image generators)
+
+### 2. RENDERING INSTRUCTIONS
+(Remind the user to attach ONLY the target face/selfie photo along with this prompt)
     ` : `
 You are a Senior Graphic Designer & Professional AI Prompt Engineer specializing in Banners & Billboards.
-Analyze the attached reference image (if any) and combine it with the following user inputs.
-
-CRITICAL RULE FOR LANGUAGE:
-- Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
-- Keep the specific text contents provided by the user in their original language.
+Analyze the attached reference image (if any) and combine it with the following user inputs to generate a clean text prompt.
 
 [USER INPUT DATA]
 - Design Mode: Commercial Banner
@@ -152,41 +143,11 @@ CRITICAL RULE FOR LANGUAGE:
 - Theme Style: ${themeStyle}
 - Special Notes: ${specialNotes}
 
-[ANTI-AI LOOK & PROFESSIONAL GRAPHIC DESIGN STANDARDS]
-1. ANTI-AI LOOK: Avoid exaggerated 3D renders, unnatural glossy/airbrushed digital effects, neon lighting, weird human skin textures, or absurd unnecessary decorations.
-2. FLAT & CLEAN GRAPHIC VECTOR: The design must look like it was purely crafted using vector software. Use sharp lines, clean grid alignment, and clear typography hierarchy.
-3. HD & ULTRA SHARP: Visual quality must be "8K resolution print-ready graphic design, crisp edges, razor-sharp typography, vector perfection".
-
-Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
-{
-  "design_type": "Banner / Spanduk ${orientation}",
-  "size": "${bannerSize}",
-  "orientation": "${orientation}",
-  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, print-ready 300 DPI",
-  "anti_ai_visual_style": "Clean flat vector graphic design, Adobe Illustrator style, sharp clean lines",
-  "design_theme": "${themeStyle}",
-  "color_scheme": "${colorPalette}",
-  "typography_hierarchy": {
-    "main_title": "${mainTitle}",
-    "sub_title": "${subTitle}",
-    "detail_text": "${description}",
-    "slogan_footer": "${slogan}"
-  },
-  "contacts_and_info": {
-    "whatsapp": "${whatsapp}",
-    "instagram": "${instagram}",
-    "tiktok": "${tiktok}",
-    "address_date": "${address}"
-  },
-  "visual_elements_and_logos": [
-    "${supportingElements}"
-  ],
-  "precise_layout_instruction": "Professional symmetrical placement, balanced arrangement based on reference layout.",
-  "negative_prompt": "3D render, glossy, plastic look, blurry text, distorted fonts, airbrushed, noise"
-}
+Generate the response in two distinct sections:
+### 1. READY-TO-USE TEXT PROMPT
+### 2. RENDERING INSTRUCTIONS
     `;
 
-    // Susun isi konten dengan mengirimkan kedua gambar jika ada di mode Vector Portrait
     const contentsParts = [{ text: systemInstruction }];
     if (isVectorPortrait) {
       if (targetBase64) {
@@ -232,7 +193,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(outputResult);
-    alert('English JSON Prompt berhasil disalin!');
+    alert('Prompt berhasil disalin!');
   };
 
   return (
@@ -243,12 +204,12 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-4 gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-blue-400">Prompt Studio Multi-Engine v2.1</h1>
+              <h1 className="text-2xl font-bold text-blue-400">Prompt Studio Multi-Engine v2.2</h1>
               <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[10px] rounded-full font-semibold">
-                🌐 Dual-Image Source Active
+                🎯 Target-Image Workflow Ready
               </span>
             </div>
-            <p className="text-xs text-slate-400">Pembangun Structured Prompt dengan Pemisahan Foto Target & Style Reference</p>
+            <p className="text-xs text-slate-400">Pembangun Prompt dengan Panduan Lampiran Foto Target</p>
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <input
@@ -281,7 +242,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            🎨 Mode Single Vector Portrait (Dual Image Input)
+            🎨 Mode Single Vector Portrait (Target & Style)
           </button>
         </div>
 
@@ -304,7 +265,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               )}
               <input 
                 type="text" 
-                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Karakter Tambahan (e.g. Wanita berhijab hitam, senyum ramah)"} 
+                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Karakter Tambahan (e.g. Wanita berhijab hitam)"} 
                 value={description} 
                 onChange={(e) => setDescription(e.target.value)} 
                 className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
@@ -321,7 +282,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 <div className="grid grid-cols-3 gap-2">
                   <input type="text" placeholder="WhatsApp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
                   <input type="text" placeholder="Instagram" value={instagram} onChange={(e) => setInstagram(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
-                  <input type="text" placeholder="TikTok" value={tiktok} onChange={(e) => setTikTok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="TikTok" value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
                 </div>
                 <input type="text" placeholder="Alamat / Tanggal" value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
@@ -353,7 +314,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               {designCategory === 'Banner' && (
                 <input type="text" placeholder="Daftar Produk" value={productList} onChange={(e) => setProductList(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               )}
-              <input type="text" placeholder="Elemen Tambahan (e.g. Pencahayaan lembut, tanpa teks)" value={supportingElements} onChange={(e) => setSupportingElements(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+              <input type="text" placeholder="Elemen Tambahan (e.g. Tanpa teks, pencahayaan lembut)" value={supportingElements} onChange={(e) => setSupportingElements(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
             </div>
 
             {/* 4. SPESIFIKASI & DUAL UPLOAD GAMBAR */}
@@ -381,7 +342,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                   {!targetPreview ? (
                     <>
                       <input type="file" accept="image/*" onChange={(e) => handleTargetFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
-                      <p className="text-slate-400 py-4 text-[11px]">Klik / Paste foto yang ingin diubah ke sini</p>
+                      <p className="text-slate-400 py-4 text-[11px]">Klik / Paste foto wajah asli ke sini</p>
                     </>
                   ) : (
                     <div className="space-y-2">
@@ -400,7 +361,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                     {!stylePreview ? (
                       <>
                         <input type="file" accept="image/*" onChange={(e) => handleStyleFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
-                        <p className="text-slate-400 py-4 text-[11px]">Klik / Upload contoh gaya vektor (opsional)</p>
+                        <p className="text-slate-400 py-4 text-[11px]">Klik / Upload contoh gaya (opsional)</p>
                       </>
                     ) : (
                       <div className="space-y-2">
@@ -419,11 +380,11 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
             {/* 5. PERINTAH KHUSUS */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
               <h2 className="font-bold text-blue-400 uppercase tracking-wider">5. Perintah Khusus</h2>
-              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Ubah wajah dari Foto Target ke gaya vektor" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
+              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Konversi wajah asli ke vektor" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
             </div>
 
             <button onClick={generatePrompt} className={`w-full py-2.5 font-bold text-white rounded transition shadow-lg ${designCategory === 'Banner' ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/30' : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/30'}`}>
-              Generate {designCategory === 'Banner' ? 'Banner' : 'Single Vector Portrait'} JSON Prompt →
+              Generate Prompt & Rendering Guide →
             </button>
           </div>
 
@@ -431,16 +392,16 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
           <div className="bg-slate-800/40 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
             <div className="space-y-3">
               <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h2 className="font-bold text-indigo-400 text-sm">PROMPT OUTPUT (ENGLISH JSON)</h2>
+                <h2 className="font-bold text-indigo-400 text-sm">PROMPT & RENDERING INSTRUCTIONS</h2>
                 <button onClick={copyToClipboard} className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded">
-                  📋 Copy Prompt
+                  📋 Copy All
                 </button>
               </div>
 
               {isLoading ? (
                 <div className="text-center py-20 text-xs text-slate-400 space-y-2">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto"></div>
-                  <p>Gemini sedang menyusun Dual-Source Vector Prompt...</p>
+                  <p>Menyiapkan prompt dan panduan render...</p>
                 </div>
               ) : (
                 <pre className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-[11px] text-emerald-400 font-mono overflow-x-auto max-h-[600px] whitespace-pre-wrap">
