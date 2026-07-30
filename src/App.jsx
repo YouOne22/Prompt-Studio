@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function App() {
-  const [apiKey, setApiKey] = useState('AQ.Ab8RN6IZbY2EJE5sxROEIzsVzVXuPtpSUgMsWFBBoPrH2_1yyQ');
+  const [apiKey, setApiKey] = useState('');
 
   // MODE DESAIN: 'Banner' atau 'Vector Portrait'
   const [designCategory, setDesignCategory] = useState('Banner');
@@ -78,7 +78,6 @@ export default function App() {
 
     const isVectorPortrait = designCategory === 'Vector Portrait';
 
-    // System instruction dinamis berdasarkan mode yang dipilih
     const systemInstruction = isVectorPortrait ? `
 You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in Vector Portrait Grids and Art Prints.
 Analyze the attached reference image (if any) and combine it with the user inputs.
