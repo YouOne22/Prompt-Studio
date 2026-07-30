@@ -119,15 +119,14 @@ CRITICAL IMAGE MAPPING RULES:
 
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
-  "task": "Convert Image 1 (Target Face) into a vector portrait using the art style of Image 2",
-  "subject_preservation": "Strictly replicate the exact facial identity, features, eyes, and expression from the uploaded Target Subject Photo (Image 1).",
-  "art_style_transfer": "Apply the clean flat vector illustration technique, line work, and shading gradients inspired by the Style Reference Photo (Image 2).",
-  "composition": "Single centered subject portrait, clean vector format, no grids, no multi-panel, no text/watermark",
-  "background": "${backgroundStyle}",
-  "orientation": "${orientation}",
+  "task": "Transform the user's uploaded real selfie photo into a high-end vector portrait illustration",
+  "subject_description": "An Indonesian adult woman with a round facial structure, warm brown skin tone, expressive dark brown eyes, a well-defined nose, full lips with natural pink lipstick, wearing a dark black hijab covering her hair and neck tightly, gentle and calm facial expression, angled selfie perspective.",
+  "art_style_transfer": "Apply a clean flat vector art illustration style, Adobe Illustrator aesthetic, smooth vector gradient skin shading, clean sharp outlines, and stylized minimalist eye highlights.",
+  "composition": "Single centered subject portrait, looking slightly upwards toward the camera, clean vector format, no extra people, no grids, no collage, no text.",
+  "background": "Solid Pastel Pink Background",
+  "orientation": "Portrait",
   "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready 300 DPI",
-  "precise_layout_instruction": "Faithfully trace and vectorize the exact person from Image 1 into a professional vector portrait matching the artistic style of Image 2. Solid background, flawless vector lines.",
-  "negative_prompt": "grid, collage, multiple panels, split screen, text, watermark, 3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture"
+  "negative_prompt": "baby, child, second person, multiple subjects, grid, collage, text, watermark, photo realism, 3D render, rough lines, noisy textures"
 }
     ` : `
 You are a Senior Graphic Designer & Professional AI Prompt Engineer specializing in Banners & Billboards.
