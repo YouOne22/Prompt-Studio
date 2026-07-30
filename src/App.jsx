@@ -24,47 +24,69 @@ export default function App() {
   const [productList, setProductList] = useState('');
   const [supportingElements, setSupportingElements] = useState('');
 
-  // 4. SPESIFIKASI & REFERENSI
+  // 4. SPESIFIKASI & DUAL GAMBAR (Target & Style Reference)
   const [orientation, setOrientation] = useState('Portrait');
   const [bannerSize, setBannerSize] = useState('High Resolution Digital Art');
   const [colorPalette, setColorPalette] = useState('');
   const [themeStyle, setThemeStyle] = useState('Clean Vector Portrait');
 
-  // 5. PERINTAH KHUSUS & GAMBAR
-  const [specialNotes, setSpecialNotes] = useState('Ubah foto referensi menjadi ilustrasi vektor tunggal yang presisi');
-  const [base64Image, setBase64Image] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  // State untuk 2 Gambar Berbeda
+  const [targetBase64, setTargetBase64] = useState(null);
+  const [targetPreview, setTargetPreview] = useState(null);
 
+  const [styleBase64, setStyleBase64] = useState(null);
+  const [stylePreview, setStylePreview] = useState(null);
+
+  // 5. PERINTAH KHUSUS
+  const [specialNotes, setSpecialNotes] = useState('Ubah wajah dari Foto Target persis ke dalam gaya ilustrasi Vektor');
+  
   // OUTPUT & LOADING
   const [outputResult, setOutputResult] = useState('Hasil JSON prompt akan muncul di sini...');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle Upload & Paste Gambar
-  const handleFileChange = (file) => {
+  // Handler Upload Foto Target (Wajah Asli)
+  const handleTargetFile = (file) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      setBase64Image(e.target.result.split(',')[1]);
-      setImagePreview(e.target.result);
+      setTargetBase64(e.target.result.split(',')[1]);
+      setTargetPreview(e.target.result);
     };
     reader.readAsDataURL(file);
   };
 
+  // Handler Upload Referensi Gaya
+  const handleStyleFile = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setStyleBase64(e.target.result.split(',')[1]);
+      setStylePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Global Paste Handler untuk Target Image
   const handlePaste = (e) => {
     const items = e.clipboardData.items;
     for (let item of items) {
       if (item.type.indexOf('image') !== -1) {
-        handleFileChange(item.getAsFile());
+        handleTargetFile(item.getAsFile());
         break;
       }
     }
   };
 
-  // Fungsi untuk Menghapus Gambar
-  const removeImage = (e) => {
+  const removeTargetImage = (e) => {
     e.stopPropagation();
-    setBase64Image(null);
-    setImagePreview(null);
+    setTargetBase64(null);
+    setTargetPreview(null);
+  };
+
+  const removeStyleImage = (e) => {
+    e.stopPropagation();
+    setStyleBase64(null);
+    setStylePreview(null);
   };
 
   const generatePrompt = async () => {
@@ -79,8 +101,11 @@ export default function App() {
     const isVectorPortrait = designCategory === 'Vector Portrait';
 
     const systemInstruction = isVectorPortrait ? `
-You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in converting photographs into clean, high-end single vector portrait illustrations (matching the style of the provided reference image like Gambar 2).
-Analyze the attached reference photo precisely to replicate facial features, expressions, hijab/headwear style, outfit, and pose into a single digital vector artwork.
+You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in converting specific photographs into high-end single vector portrait illustrations.
+
+CRITICAL INSTRUCTIONS FOR IMAGE HANDLING:
+1. TARGET SUBJECT PHOTO (First attached image): You MUST analyze this exact face, facial structure, expression, angle, and features. The generated vector illustration MUST accurately represent the person in this target photo.
+2. STYLE REFERENCE PHOTO (Second attached image, if provided): Use this ONLY as a visual style reference (e.g., line weights, color shading style, vector aesthetic). Do NOT copy the face from this style reference.
 
 CRITICAL RULE FOR LANGUAGE:
 - Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
@@ -88,7 +113,7 @@ CRITICAL RULE FOR LANGUAGE:
 
 [USER INPUT DATA]
 - Design Mode: Single Vector Portrait Illustration (No Grids, No Collage, No Text)
-- Background Style: ${backgroundStyle} (e.g., solid pastel pink background)
+- Background Style: ${backgroundStyle}
 - Art Style: ${artStyle}
 - Character Details & Outfit: ${description}
 - Orientation: ${orientation}
@@ -97,14 +122,16 @@ CRITICAL RULE FOR LANGUAGE:
 - Special Notes: ${specialNotes}
 
 [SINGLE VECTOR PORTRAIT ART STANDARDS]
-1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth vector shading gradients, clean bold outlines, vector perfection. NO grids, NO multi-panel layouts, NO collage frames, NO typography/text at the bottom.
-2. COMPOSITION: Single subject portrait centered or dynamically framed, capturing the exact person, expression, angle, and clothing from the reference image.
-3. BACKGROUND: Clean solid or soft minimalist background (${backgroundStyle}) to make the vector portrait stand out cleanly.
+1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth vector shading gradients, clean bold outlines, vector perfection. NO grids, NO multi-panel layouts, NO collage frames, NO typography/text.
+2. COMPOSITION: Single subject portrait centered or dynamically framed, capturing the exact person from the TARGET SUBJECT PHOTO.
+3. BACKGROUND: Clean solid or soft minimalist background (${backgroundStyle}).
 4. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, razor-sharp outlines.
 
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
   "design_category": "Single Vector Portrait Illustration",
+  "subject_source": "Accurately trace and convert the face, expression, and features from the TARGET SUBJECT PHOTO into vector art.",
+  "style_source": "Apply the graphic vector technique and color grading inspired by the STYLE REFERENCE PHOTO.",
   "composition": "Single centered subject portrait, no grids, no collage, no frames",
   "background": "${backgroundStyle}",
   "orientation": "${orientation}",
@@ -113,7 +140,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
   "design_theme": "${themeStyle}",
   "color_scheme": "${colorPalette}",
   "character_details": "${description}",
-  "precise_layout_instruction": "Faithfully convert the uploaded reference photo into a single clean vector portrait illustration with smooth gradients, precise facial tracing, clean outlines, and a solid pastel background matching reference style Gambar 2. Absolutely no text, no borders, no multi-panels.",
+  "precise_layout_instruction": "Convert the exact person from the target subject photo into a single clean vector portrait illustration with smooth gradients, precise facial tracing, clean outlines, and a solid background. Absolutely no text, no borders, no multi-panels.",
   "negative_prompt": "grid, collage, multiple panels, split screen, text, watermark, 3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture, complex background"
 }
     ` : `
@@ -122,7 +149,7 @@ Analyze the attached reference image (if any) and combine it with the following 
 
 CRITICAL RULE FOR LANGUAGE:
 - Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
-- Keep the specific text contents provided by the user (titles, subtitles, descriptions, slogans, contacts, and addresses) in their original language.
+- Keep the specific text contents provided by the user in their original language.
 
 [USER INPUT DATA]
 - Design Mode: Commercial Banner
@@ -142,17 +169,16 @@ CRITICAL RULE FOR LANGUAGE:
 
 [ANTI-AI LOOK & PROFESSIONAL GRAPHIC DESIGN STANDARDS]
 1. ANTI-AI LOOK: Avoid exaggerated 3D renders, unnatural glossy/airbrushed digital effects, neon lighting, weird human skin textures, or absurd unnecessary decorations.
-2. FLAT & CLEAN GRAPHIC VECTOR: The design must look like it was purely crafted using vector software (CorelDraw / Adobe Illustrator). Use sharp lines, clean grid alignment, symmetrical/proportional layout, and clear typography hierarchy.
-3. HD & ULTRA SHARP: Visual quality must be "8K resolution print-ready graphic design, crisp edges, razor-sharp typography, vector perfection, high contrast, clean background".
-4. TYPOGRAPHY ACCURACY: Instruct the AI renderer to generate text that is extremely clear, accurate to the letters, sharp, and free of typos/defects.
+2. FLAT & CLEAN GRAPHIC VECTOR: The design must look like it was purely crafted using vector software. Use sharp lines, clean grid alignment, and clear typography hierarchy.
+3. HD & ULTRA SHARP: Visual quality must be "8K resolution print-ready graphic design, crisp edges, razor-sharp typography, vector perfection".
 
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
   "design_type": "Banner / Spanduk ${orientation}",
   "size": "${bannerSize}",
   "orientation": "${orientation}",
-  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, print-ready 300 DPI, flawless typography rendering",
-  "anti_ai_visual_style": "Clean flat vector graphic design, Adobe Illustrator style, no 3D airbrush, no glossy AI artifacts, sharp clean lines, professional layout grid, minimalist corporate aesthetic",
+  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, print-ready 300 DPI",
+  "anti_ai_visual_style": "Clean flat vector graphic design, Adobe Illustrator style, sharp clean lines",
   "design_theme": "${themeStyle}",
   "color_scheme": "${colorPalette}",
   "typography_hierarchy": {
@@ -170,19 +196,30 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
   "visual_elements_and_logos": [
     "${supportingElements}"
   ],
-  "precise_layout_instruction": "Professional symmetrical placement, balanced arrangement based on reference layout, clear visual hierarchy, ample negative space.",
-  "negative_prompt": "3D render, glossy, plastic look, blurry text, distorted fonts, airbrushed, oversaturated lighting, noise, artifacts, realistic human photo artifacts, messy alignment"
+  "precise_layout_instruction": "Professional symmetrical placement, balanced arrangement based on reference layout.",
+  "negative_prompt": "3D render, glossy, plastic look, blurry text, distorted fonts, airbrushed, noise"
 }
     `;
 
+    // Susun isi konten dengan mengirimkan kedua gambar jika ada di mode Vector Portrait
     const contentsParts = [{ text: systemInstruction }];
-    if (base64Image) {
-      contentsParts.push({
-        inline_data: {
-          mime_type: 'image/png',
-          data: base64Image,
-        },
-      });
+    if (isVectorPortrait) {
+      if (targetBase64) {
+        contentsParts.push({
+          inline_data: { mime_type: 'image/png', data: targetBase64 },
+        });
+      }
+      if (styleBase64) {
+        contentsParts.push({
+          inline_data: { mime_type: 'image/png', data: styleBase64 },
+        });
+      }
+    } else {
+      if (targetBase64) {
+        contentsParts.push({
+          inline_data: { mime_type: 'image/png', data: targetBase64 },
+        });
+      }
     }
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
@@ -221,12 +258,12 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-4 gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-blue-400">Prompt Studio Multi-Engine v2.0</h1>
+              <h1 className="text-2xl font-bold text-blue-400">Prompt Studio Multi-Engine v2.1</h1>
               <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[10px] rounded-full font-semibold">
-                🌐 Single Vector Mode Active
+                🌐 Dual-Image Source Active
               </span>
             </div>
-            <p className="text-xs text-slate-400">Pembangun Structured Prompt untuk Banner & Single Vector Portrait</p>
+            <p className="text-xs text-slate-400">Pembangun Structured Prompt dengan Pemisahan Foto Target & Style Reference</p>
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <input
@@ -259,7 +296,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            🎨 Mode Single Vector Portrait (Gaya Gambar 2)
+            🎨 Mode Single Vector Portrait (Dual Image Input)
           </button>
         </div>
 
@@ -282,7 +319,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               )}
               <input 
                 type="text" 
-                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Karakter (e.g. Wanita berhijab abu-abu, baju hitam outer abu)"} 
+                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Karakter Tambahan (e.g. Wanita berhijab hitam, senyum ramah)"} 
                 value={description} 
                 onChange={(e) => setDescription(e.target.value)} 
                 className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
@@ -299,7 +336,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 <div className="grid grid-cols-3 gap-2">
                   <input type="text" placeholder="WhatsApp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
                   <input type="text" placeholder="Instagram" value={instagram} onChange={(e) => setInstagram(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
-                  <input type="text" placeholder="TikTok" value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="TikTok" value={tiktok} onChange={(e) => setTikTok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
                 </div>
                 <input type="text" placeholder="Alamat / Tanggal" value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
@@ -334,9 +371,9 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               <input type="text" placeholder="Elemen Tambahan (e.g. Pencahayaan lembut, tanpa teks)" value={supportingElements} onChange={(e) => setSupportingElements(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
             </div>
 
-            {/* 4. SPESIFIKASI & REFERENSI */}
+            {/* 4. SPESIFIKASI & DUAL UPLOAD GAMBAR */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
-              <h2 className="font-bold text-blue-400 uppercase tracking-wider">4. Spesifikasi & Referensi Gambar</h2>
+              <h2 className="font-bold text-blue-400 uppercase tracking-wider">4. Spesifikasi & Sumber Gambar</h2>
               <div className="grid grid-cols-2 gap-2">
                 <select value={orientation} onChange={(e) => setOrientation(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none">
                   <option value="Portrait">Portrait</option>
@@ -350,36 +387,54 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 <input type="text" placeholder="Tema Desain" value={themeStyle} onChange={(e) => setThemeStyle(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
 
-              {/* Upload Box dengan Tombol Hapus */}
-              <div className="border border-dashed border-slate-700 rounded-lg p-3 text-center bg-slate-900/50 relative">
-                {!imagePreview ? (
-                  <>
-                    <input type="file" accept="image/*" onChange={(e) => handleFileChange(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
-                    <p className="text-slate-400 py-2">Klik / Drag / Paste (Ctrl+V) foto referensi target ke sini</p>
-                  </>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="relative inline-block group">
-                      <img src={imagePreview} alt="Preview" className="max-h-36 mx-auto rounded border border-slate-700 object-contain" />
-                    </div>
-                    <div>
-                      <button 
-                        onClick={removeImage}
-                        type="button"
-                        className="px-3 py-1 bg-red-600/80 hover:bg-red-600 text-white font-medium rounded text-[10px] transition shadow"
-                      >
-                        🗑️ Hapus Gambar Referensi
+              {/* Wadah Dual Upload Gambar */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
+                
+                {/* 1. Upload Foto Target (Yang Mau Diubah) */}
+                <div className="border border-dashed border-blue-500/50 rounded-lg p-3 text-center bg-blue-950/20 relative">
+                  <p className="font-semibold text-blue-400 mb-1">1. Foto Target (Asli)</p>
+                  {!targetPreview ? (
+                    <>
+                      <input type="file" accept="image/*" onChange={(e) => handleTargetFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
+                      <p className="text-slate-400 py-4 text-[11px]">Klik / Paste foto yang ingin diubah ke sini</p>
+                    </>
+                  ) : (
+                    <div className="space-y-2">
+                      <img src={targetPreview} alt="Target Preview" className="max-h-28 mx-auto rounded border border-slate-700 object-contain" />
+                      <button onClick={removeTargetImage} type="button" className="px-2 py-1 bg-red-600/80 hover:bg-red-600 text-white rounded text-[10px]">
+                        🗑️ Hapus Target
                       </button>
                     </div>
+                  )}
+                </div>
+
+                {/* 2. Upload Referensi Gaya (Style Art) */}
+                {designCategory === 'Vector Portrait' && (
+                  <div className="border border-dashed border-indigo-500/50 rounded-lg p-3 text-center bg-indigo-950/20 relative">
+                    <p className="font-semibold text-indigo-400 mb-1">2. Referensi Gaya Seni</p>
+                    {!stylePreview ? (
+                      <>
+                        <input type="file" accept="image/*" onChange={(e) => handleStyleFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
+                        <p className="text-slate-400 py-4 text-[11px]">Klik / Upload contoh gaya vektor (opsional)</p>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <img src={stylePreview} alt="Style Preview" className="max-h-28 mx-auto rounded border border-slate-700 object-contain" />
+                        <button onClick={removeStyleImage} type="button" className="px-2 py-1 bg-red-600/80 hover:bg-red-600 text-white rounded text-[10px]">
+                          🗑️ Hapus Style Ref
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
+
               </div>
             </div>
 
             {/* 5. PERINTAH KHUSUS */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
               <h2 className="font-bold text-blue-400 uppercase tracking-wider">5. Perintah Khusus</h2>
-              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Ubah foto asli menjadi ilustrasi vektor tunggal yang mulus" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
+              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Ubah wajah dari Foto Target ke gaya vektor" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
             </div>
 
             <button onClick={generatePrompt} className={`w-full py-2.5 font-bold text-white rounded transition shadow-lg ${designCategory === 'Banner' ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/30' : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/30'}`}>
@@ -400,7 +455,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               {isLoading ? (
                 <div className="text-center py-20 text-xs text-slate-400 space-y-2">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto"></div>
-                  <p>Gemini sedang menyusun Single Vector Portrait Prompt...</p>
+                  <p>Gemini sedang menyusun Dual-Source Vector Prompt...</p>
                 </div>
               ) : (
                 <pre className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-[11px] text-emerald-400 font-mono overflow-x-auto max-h-[600px] whitespace-pre-wrap">
