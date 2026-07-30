@@ -7,7 +7,7 @@ export default function App() {
   const [designCategory, setDesignCategory] = useState('Banner');
 
   // 1. DATA INFORMASI (TEKS)
-  const [mainTitle, setMainTitle] = useState('');
+  const [mainTitle, setMainTitle] = useState('VECTOR ART\nPROFESIONAL');
   const [subTitle, setSubTitle] = useState('');
   const [description, setDescription] = useState('');
   const [slogan, setSlogan] = useState('');
@@ -19,7 +19,7 @@ export default function App() {
   const [address, setAddress] = useState('');
 
   // 3. BAHAN VISUAL & GRID (Khusus Vector Portrait)
-  const [gridType, setGridType] = useState('2x2 Grid Collage (Empat Panel)');
+  const [gridType, setGridType] = useState('5x5 Multi-Panel Grid Collage');
   const [frameStyle, setFrameStyle] = useState('Clean White Border with Color Frame');
   const [productList, setProductList] = useState('');
   const [supportingElements, setSupportingElements] = useState('');
@@ -79,16 +79,16 @@ export default function App() {
     const isVectorPortrait = designCategory === 'Vector Portrait';
 
     const systemInstruction = isVectorPortrait ? `
-You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in Vector Portrait Grids and Art Prints.
-Analyze the attached reference image (if any) and combine it with the user inputs.
+You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in multi-panel photo grid posters, collage art prints, and vector illustrations.
+Analyze the attached reference image to replicate the character, facial features, outfit, and expressions accurately across a structured grid layout matching Gambar 1.
 
 CRITICAL RULE FOR LANGUAGE:
 - Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
 - Keep specific text contents provided by the user in their original language.
 
 [USER INPUT DATA]
-- Design Mode: Vector Portrait & Art Grid
-- Grid Composition Type: ${gridType}
+- Design Mode: Vector Portrait Multi-Panel Grid Poster (Art Print)
+- Grid Composition Type: ${gridType} (e.g., repeating grid matrix displaying multiple poses/angles of the character)
 - Frame/Border Style: ${frameStyle}
 - Character Title/Name: ${mainTitle}
 - Character Details/Outfit: ${description}
@@ -97,25 +97,26 @@ CRITICAL RULE FOR LANGUAGE:
 - Theme Style: ${themeStyle}
 - Special Notes: ${specialNotes}
 
-[VECTOR PORTRAIT & ART PRINT STANDARDS]
+[VECTOR PORTRAIT & GRID POSTER STANDARDS]
 1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth shading gradients, clean bold outlines, professional vector perfection.
-2. COMPOSITION: ${gridType}, clean symmetrical layout, clear margins.
-3. FRAMING: ${frameStyle}, balanced whitespace, gallery art print aesthetic.
-4. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, no random wild texts or watermarks.
+2. MULTI-PANEL GRID COMPOSITION: A structured multi-grid collage layout (like a photo booth strip or 5x5 matrix) showcasing the character from the reference image in various slight expression variations or poses across the grid cells.
+3. FOOTER SECTION: At the bottom of the poster, include a clean typography banner displaying the main title "${mainTitle}" integrated cleanly into the design layout with minimalist horizontal divider lines or decorative accents.
+4. FRAMING & BORDERS: ${frameStyle}, thick outer clean white border with a solid colored accent frame, gallery art print aesthetic.
+5. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, no random wild text or watermarks except the specified title text.
 
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
-  "design_category": "Vector Portrait Grid & Art Print",
+  "design_category": "Vector Portrait Multi-Panel Grid Poster",
   "grid_composition": "${gridType}",
   "frame_style": "${frameStyle}",
   "orientation": "${orientation}",
-  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready",
+  "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready 300 DPI",
   "vector_art_style": "Adobe Illustrator flat vector art, clean outlines, professional color blocking, vector perfection",
   "design_theme": "${themeStyle}",
   "color_scheme": "${colorPalette}",
   "character_details": "${description}",
   "title_text": "${mainTitle}",
-  "precise_layout_instruction": "Clean vector portrait composition, balanced grid alignment, professional whitespace, high-end art print style matching reference.",
+  "precise_layout_instruction": "Multi-cell grid photo collage layout replicating the character from the reference image across cells, featuring a structured bottom typography banner with title text and clean borders.",
   "negative_prompt": "3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture, complex background, commercial phone numbers, random text"
 }
     ` : `
@@ -279,7 +280,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               <div className="grid grid-cols-2 gap-2">
                 <input 
                   type="text" 
-                  placeholder={designCategory === 'Banner' ? "Judul Utama (e.g. BIMBINGAN TEKNIS)" : "Nama / Judul Karakter (e.g. Seragam SMA)"} 
+                  placeholder={designCategory === 'Banner' ? "Judul Utama (e.g. BIMBINGAN TEKNIS)" : "Nama / Judul Karakter (e.g. VECTOR ART)"} 
                   value={mainTitle} 
                   onChange={(e) => setMainTitle(e.target.value)} 
                   className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
@@ -327,7 +328,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 <div className="grid grid-cols-2 gap-2">
                   <input 
                     type="text" 
-                    placeholder="Tipe Grid (e.g. 2x2 Grid Collage)" 
+                    placeholder="Tipe Grid (e.g. 5x5 Multi-Panel Grid)" 
                     value={gridType} 
                     onChange={(e) => setGridType(e.target.value)} 
                     className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
