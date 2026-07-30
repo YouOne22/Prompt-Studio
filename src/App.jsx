@@ -102,11 +102,11 @@ export default function App() {
 
     const systemInstruction = isVectorPortrait ? `
 You are an expert Image-to-Prompt Converter and Senior Vector Illustrator. 
-Your task is to analyze the uploaded images and output a clean, highly descriptive text prompt in English for an AI image generator, optimized to work alongside a single attached target photo.
+Your task is to analyze the uploaded images and output a precise, highly descriptive text prompt in English for an AI image generator.
 
-CRITICAL RULES:
-1. Write a cohesive, powerful text prompt that describes the exact subject details, facial features from the target photo, clothing, color palette, background, and vector art style.
-2. Provide clear instructions on how the user should use the final prompt with their target photo.
+CRITICAL INSTRUCTIONS FOR THE PROMPT:
+1. Do NOT use lazy phrases like "from the target photo". Instead, write a descriptive prompt that commands the AI to use the attached person's exact face, facial proportions, eyes, and expression.
+2. Combine the detailed description of the person's face from the uploaded selfie with the clean flat vector art style, solid pastel pink background, and professional Adobe Illustrator aesthetic.
 
 [USER INPUT DATA]
 - Background Style: ${backgroundStyle}
@@ -119,10 +119,10 @@ CRITICAL RULES:
 
 Generate the response in two distinct sections:
 ### 1. READY-TO-USE TEXT PROMPT
-(Provide the descriptive prompt paragraph/JSON optimized for image generators)
+(Provide a pure text prompt string—avoiding JSON format block if it causes confusion—that explicitly tells the AI to redraw the exact face of the person in the attached image into the specified vector style)
 
 ### 2. RENDERING INSTRUCTIONS
-(Remind the user to attach ONLY the target face/selfie photo along with this prompt)
+(Remind the user to attach ONLY their selfie photo along with this prompt)
     ` : `
 You are a Senior Graphic Designer & Professional AI Prompt Engineer specializing in Banners & Billboards.
 Analyze the attached reference image (if any) and combine it with the following user inputs to generate a clean text prompt.
