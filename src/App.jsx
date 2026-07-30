@@ -101,18 +101,14 @@ export default function App() {
     const isVectorPortrait = designCategory === 'Vector Portrait';
 
     const systemInstruction = isVectorPortrait ? `
-You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in converting specific photographs into high-end single vector portrait illustrations.
+You are an expert Image-to-Prompt Converter and Senior Vector Illustrator. 
+Your task is to analyze the uploaded images and output a precise, professional English JSON prompt for an AI image generator (like Midjourney / Stable Diffusion / Imagen).
 
-CRITICAL INSTRUCTIONS FOR IMAGE HANDLING:
-1. TARGET SUBJECT PHOTO (First attached image): You MUST analyze this exact face, facial structure, expression, angle, and features. The generated vector illustration MUST accurately represent the person in this target photo.
-2. STYLE REFERENCE PHOTO (Second attached image, if provided): Use this ONLY as a visual style reference (e.g., line weights, color shading style, vector aesthetic). Do NOT copy the face from this style reference.
-
-CRITICAL RULE FOR LANGUAGE:
-- Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
-- Keep specific text contents provided by the user in their original language.
+CRITICAL IMAGE MAPPING RULES:
+1. IMAGE 1 (THE TARGET SUBJECT): This is the absolute source of truth for the human face, facial bone structure, eyes, nose, lips, expression, and unique features. You MUST instruct the generator to preserve this exact person's face.
+2. IMAGE 2 (THE STYLE REFERENCE): Use this ONLY for the vector art style, line art thickness, shading style, and color grading aesthetic. Do NOT use the face from Image 2.
 
 [USER INPUT DATA]
-- Design Mode: Single Vector Portrait Illustration (No Grids, No Collage, No Text)
 - Background Style: ${backgroundStyle}
 - Art Style: ${artStyle}
 - Character Details & Outfit: ${description}
@@ -121,27 +117,17 @@ CRITICAL RULE FOR LANGUAGE:
 - Theme Style: ${themeStyle}
 - Special Notes: ${specialNotes}
 
-[SINGLE VECTOR PORTRAIT ART STANDARDS]
-1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth vector shading gradients, clean bold outlines, vector perfection. NO grids, NO multi-panel layouts, NO collage frames, NO typography/text.
-2. COMPOSITION: Single subject portrait centered or dynamically framed, capturing the exact person from the TARGET SUBJECT PHOTO.
-3. BACKGROUND: Clean solid or soft minimalist background (${backgroundStyle}).
-4. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, razor-sharp outlines.
-
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
-  "design_category": "Single Vector Portrait Illustration",
-  "subject_source": "Accurately trace and convert the face, expression, and features from the TARGET SUBJECT PHOTO into vector art.",
-  "style_source": "Apply the graphic vector technique and color grading inspired by the STYLE REFERENCE PHOTO.",
-  "composition": "Single centered subject portrait, no grids, no collage, no frames",
+  "task": "Convert Image 1 (Target Face) into a vector portrait using the art style of Image 2",
+  "subject_preservation": "Strictly replicate the exact facial identity, features, eyes, and expression from the uploaded Target Subject Photo (Image 1).",
+  "art_style_transfer": "Apply the clean flat vector illustration technique, line work, and shading gradients inspired by the Style Reference Photo (Image 2).",
+  "composition": "Single centered subject portrait, clean vector format, no grids, no multi-panel, no text/watermark",
   "background": "${backgroundStyle}",
   "orientation": "${orientation}",
   "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready 300 DPI",
-  "vector_art_style": "Adobe Illustrator flat vector art, clean outlines, professional color blocking, vector perfection",
-  "design_theme": "${themeStyle}",
-  "color_scheme": "${colorPalette}",
-  "character_details": "${description}",
-  "precise_layout_instruction": "Convert the exact person from the target subject photo into a single clean vector portrait illustration with smooth gradients, precise facial tracing, clean outlines, and a solid background. Absolutely no text, no borders, no multi-panels.",
-  "negative_prompt": "grid, collage, multiple panels, split screen, text, watermark, 3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture, complex background"
+  "precise_layout_instruction": "Faithfully trace and vectorize the exact person from Image 1 into a professional vector portrait matching the artistic style of Image 2. Solid background, flawless vector lines.",
+  "negative_prompt": "grid, collage, multiple panels, split screen, text, watermark, 3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture"
 }
     ` : `
 You are a Senior Graphic Designer & Professional AI Prompt Engineer specializing in Banners & Billboards.
