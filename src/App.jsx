@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function App() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState('AQ.Ab8RN6IZbY2EJE5sxROEIzsVzVXuPtpSUgMsWFBBoPrH2_1yyQ');
 
   // MODE DESAIN: 'Banner' atau 'Vector Portrait'
   const [designCategory, setDesignCategory] = useState('Banner');
