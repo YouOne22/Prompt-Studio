@@ -7,7 +7,7 @@ export default function App() {
   const [designCategory, setDesignCategory] = useState('Banner');
 
   // 1. DATA INFORMASI (TEKS)
-  const [mainTitle, setMainTitle] = useState('VECTOR ART\nPROFESIONAL');
+  const [mainTitle, setMainTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
   const [description, setDescription] = useState('');
   const [slogan, setSlogan] = useState('');
@@ -18,20 +18,20 @@ export default function App() {
   const [tiktok, setTiktok] = useState('');
   const [address, setAddress] = useState('');
 
-  // 3. BAHAN VISUAL & GRID (Khusus Vector Portrait)
-  const [gridType, setGridType] = useState('5x5 Multi-Panel Grid Collage');
-  const [frameStyle, setFrameStyle] = useState('Clean White Border with Color Frame');
+  // 3. BAHAN VISUAL & GAYA (Khusus Vector Portrait Single)
+  const [backgroundStyle, setBackgroundStyle] = useState('Solid Pastel Pink Background');
+  const [artStyle, setArtStyle] = useState('Flat Vector Art Illustration, Adobe Illustrator Style');
   const [productList, setProductList] = useState('');
   const [supportingElements, setSupportingElements] = useState('');
 
   // 4. SPESIFIKASI & REFERENSI
   const [orientation, setOrientation] = useState('Portrait');
-  const [bannerSize, setBannerSize] = useState('A4 / Custom Grid');
+  const [bannerSize, setBannerSize] = useState('High Resolution Digital Art');
   const [colorPalette, setColorPalette] = useState('');
-  const [themeStyle, setThemeStyle] = useState('Flat Vector Illustration');
+  const [themeStyle, setThemeStyle] = useState('Clean Vector Portrait');
 
   // 5. PERINTAH KHUSUS & GAMBAR
-  const [specialNotes, setSpecialNotes] = useState('Ambil data dan referensi visual dengan akurat');
+  const [specialNotes, setSpecialNotes] = useState('Ubah foto referensi menjadi ilustrasi vektor tunggal yang presisi');
   const [base64Image, setBase64Image] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -79,45 +79,42 @@ export default function App() {
     const isVectorPortrait = designCategory === 'Vector Portrait';
 
     const systemInstruction = isVectorPortrait ? `
-You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in multi-panel photo grid posters, collage art prints, and vector illustrations.
-Analyze the attached reference image to replicate the character, facial features, outfit, and expressions accurately across a structured grid layout matching Gambar 1.
+You are a Senior Vector Illustrator & Professional AI Prompt Engineer specializing in converting photographs into clean, high-end single vector portrait illustrations (matching the style of the provided reference image like Gambar 2).
+Analyze the attached reference photo precisely to replicate facial features, expressions, hijab/headwear style, outfit, and pose into a single digital vector artwork.
 
 CRITICAL RULE FOR LANGUAGE:
 - Write ALL structural instructions, visual styles, design themes, layout instructions, and negative prompts in **Professional English** to ensure maximum AI rendering accuracy.
 - Keep specific text contents provided by the user in their original language.
 
 [USER INPUT DATA]
-- Design Mode: Vector Portrait Multi-Panel Grid Poster (Art Print)
-- Grid Composition Type: ${gridType} (e.g., repeating grid matrix displaying multiple poses/angles of the character)
-- Frame/Border Style: ${frameStyle}
-- Character Title/Name: ${mainTitle}
-- Character Details/Outfit: ${description}
+- Design Mode: Single Vector Portrait Illustration (No Grids, No Collage, No Text)
+- Background Style: ${backgroundStyle} (e.g., solid pastel pink background)
+- Art Style: ${artStyle}
+- Character Details & Outfit: ${description}
 - Orientation: ${orientation}
 - Dominant Colors: ${colorPalette}
 - Theme Style: ${themeStyle}
 - Special Notes: ${specialNotes}
 
-[VECTOR PORTRAIT & GRID POSTER STANDARDS]
-1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth shading gradients, clean bold outlines, professional vector perfection.
-2. MULTI-PANEL GRID COMPOSITION: A structured multi-grid collage layout (like a photo booth strip or 5x5 matrix) showcasing the character from the reference image in various slight expression variations or poses across the grid cells.
-3. FOOTER SECTION: At the bottom of the poster, include a clean typography banner displaying the main title "${mainTitle}" integrated cleanly into the design layout with minimalist horizontal divider lines or decorative accents.
-4. FRAMING & BORDERS: ${frameStyle}, thick outer clean white border with a solid colored accent frame, gallery art print aesthetic.
-5. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, no random wild text or watermarks except the specified title text.
+[SINGLE VECTOR PORTRAIT ART STANDARDS]
+1. STYLE: High-end flat vector graphic design, Adobe Illustrator style, smooth vector shading gradients, clean bold outlines, vector perfection. NO grids, NO multi-panel layouts, NO collage frames, NO typography/text at the bottom.
+2. COMPOSITION: Single subject portrait centered or dynamically framed, capturing the exact person, expression, angle, and clothing from the reference image.
+3. BACKGROUND: Clean solid or soft minimalist background (${backgroundStyle}) to make the vector portrait stand out cleanly.
+4. ANTI-AI LOOK: No 3D glossy airbrush, no plastic textures, no distorted human anatomy, clean vector look, razor-sharp outlines.
 
 Generate the output ONLY as a structured JSON object with no opening or closing conversational text. Use the following JSON schema:
 {
-  "design_category": "Vector Portrait Multi-Panel Grid Poster",
-  "grid_composition": "${gridType}",
-  "frame_style": "${frameStyle}",
+  "design_category": "Single Vector Portrait Illustration",
+  "composition": "Single centered subject portrait, no grids, no collage, no frames",
+  "background": "${backgroundStyle}",
   "orientation": "${orientation}",
   "rendering_quality": "8K Ultra-HD, razor-sharp vector graphic, clean vector outlines, smooth shading, print-ready 300 DPI",
   "vector_art_style": "Adobe Illustrator flat vector art, clean outlines, professional color blocking, vector perfection",
   "design_theme": "${themeStyle}",
   "color_scheme": "${colorPalette}",
   "character_details": "${description}",
-  "title_text": "${mainTitle}",
-  "precise_layout_instruction": "Multi-cell grid photo collage layout replicating the character from the reference image across cells, featuring a structured bottom typography banner with title text and clean borders.",
-  "negative_prompt": "3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture, complex background, commercial phone numbers, random text"
+  "precise_layout_instruction": "Faithfully convert the uploaded reference photo into a single clean vector portrait illustration with smooth gradients, precise facial tracing, clean outlines, and a solid pastel background matching reference style Gambar 2. Absolutely no text, no borders, no multi-panels.",
+  "negative_prompt": "grid, collage, multiple panels, split screen, text, watermark, 3D render, glossy, plastic look, blurry lines, distorted face, realistic photo, noisy texture, complex background"
 }
     ` : `
 You are a Senior Graphic Designer & Professional AI Prompt Engineer specializing in Banners & Billboards.
@@ -226,10 +223,10 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-bold text-blue-400">Prompt Studio Multi-Engine v2.0</h1>
               <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[10px] rounded-full font-semibold">
-                🌐 Multi-Function Active
+                🌐 Single Vector Mode Active
               </span>
             </div>
-            <p className="text-xs text-slate-400">Pembangun Structured Prompt untuk Banner & Vector Portrait Grid</p>
+            <p className="text-xs text-slate-400">Pembangun Structured Prompt untuk Banner & Single Vector Portrait</p>
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <input
@@ -262,7 +259,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            🎨 Mode Vector Portrait & Art Grid
+            🎨 Mode Single Vector Portrait (Gaya Gambar 2)
           </button>
         </div>
 
@@ -275,69 +272,53 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
             {/* 1. DATA INFORMASI / KARAKTER */}
             <div className="space-y-2">
               <h2 className="font-bold text-blue-400 uppercase tracking-wider">
-                {designCategory === 'Banner' ? '1. Data Informasi (Teks Spanduk)' : '1. Identitas & Deskripsi Karakter'}
+                {designCategory === 'Banner' ? '1. Data Informasi (Teks Spanduk)' : '1. Deskripsi Karakter & Subjek'}
               </h2>
-              <div className="grid grid-cols-2 gap-2">
-                <input 
-                  type="text" 
-                  placeholder={designCategory === 'Banner' ? "Judul Utama (e.g. BIMBINGAN TEKNIS)" : "Nama / Judul Karakter (e.g. VECTOR ART)"} 
-                  value={mainTitle} 
-                  onChange={(e) => setMainTitle(e.target.value)} 
-                  className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
-                />
-                <input 
-                  type="text" 
-                  placeholder={designCategory === 'Banner' ? "Sub-Judul (e.g. PKB MADRASAH)" : "Detail Pakaian / Atribut (e.g. Hijab Abu)"} 
-                  value={subTitle} 
-                  onChange={(e) => setSubTitle(e.target.value)} 
-                  className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
-                />
-              </div>
+              {designCategory === 'Banner' && (
+                <div className="grid grid-cols-2 gap-2">
+                  <input type="text" placeholder="Judul Utama" value={mainTitle} onChange={(e) => setMainTitle(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="Sub-Judul" value={subTitle} onChange={(e) => setSubTitle(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                </div>
+              )}
               <input 
                 type="text" 
-                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Tambahan Ekspresi / Pose"} 
+                placeholder={designCategory === 'Banner' ? "Informasi / Detail Penawaran" : "Deskripsi Karakter (e.g. Wanita berhijab abu-abu, baju hitam outer abu)"} 
                 value={description} 
                 onChange={(e) => setDescription(e.target.value)} 
                 className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
               />
               {designCategory === 'Banner' && (
-                <input 
-                  type="text" 
-                  placeholder="Slogan / Instansi" 
-                  value={slogan} 
-                  onChange={(e) => setSlogan(e.target.value)} 
-                  className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
-                />
+                <input type="text" placeholder="Slogan / Instansi" value={slogan} onChange={(e) => setSlogan(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               )}
             </div>
 
-            {/* 2. PANEL KONTAK ATAU GRID & BINGKAI */}
+            {/* 2. PANEL KONTAK ATAU LATAR BELAKANG */}
             {designCategory === 'Banner' ? (
               <div className="space-y-2 pt-2 border-t border-slate-800">
                 <h2 className="font-bold text-blue-400 uppercase tracking-wider">2. Panel Kontak & Alamat</h2>
                 <div className="grid grid-cols-3 gap-2">
-                  <input type="text" placeholder="WhatsApp (0812...)" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
-                  <input type="text" placeholder="Instagram (@brand)" value={instagram} onChange={(e) => setInstagram(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
-                  <input type="text" placeholder="TikTok (@user)" value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="WhatsApp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="Instagram" value={instagram} onChange={(e) => setInstagram(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                  <input type="text" placeholder="TikTok" value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
                 </div>
-                <input type="text" placeholder="Alamat / Tempat & Tanggal Kegiatan" value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                <input type="text" placeholder="Alamat / Tanggal" value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
             ) : (
               <div className="space-y-2 pt-2 border-t border-slate-800">
-                <h2 className="font-bold text-indigo-400 uppercase tracking-wider">2. Komposisi Grid & Gaya Bingkai</h2>
+                <h2 className="font-bold text-indigo-400 uppercase tracking-wider">2. Gaya Latar Belakang & Seni Vektor</h2>
                 <div className="grid grid-cols-2 gap-2">
                   <input 
                     type="text" 
-                    placeholder="Tipe Grid (e.g. 5x5 Multi-Panel Grid)" 
-                    value={gridType} 
-                    onChange={(e) => setGridType(e.target.value)} 
+                    placeholder="Gaya Latar (e.g. Solid Pastel Pink Background)" 
+                    value={backgroundStyle} 
+                    onChange={(e) => setBackgroundStyle(e.target.value)} 
                     className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
                   />
                   <input 
                     type="text" 
-                    placeholder="Gaya Bingkai (e.g. White Border + Colored Frame)" 
-                    value={frameStyle} 
-                    onChange={(e) => setFrameStyle(e.target.value)} 
+                    placeholder="Gaya Seni (e.g. Flat Vector Art)" 
+                    value={artStyle} 
+                    onChange={(e) => setArtStyle(e.target.value)} 
                     className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" 
                   />
                 </div>
@@ -348,9 +329,9 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
             <div className="space-y-2 pt-2 border-t border-slate-800">
               <h2 className="font-bold text-blue-400 uppercase tracking-wider">3. Bahan Visual & Elemen Pendukung</h2>
               {designCategory === 'Banner' && (
-                <input type="text" placeholder="Daftar Nama Produk / Menu" value={productList} onChange={(e) => setProductList(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                <input type="text" placeholder="Daftar Produk" value={productList} onChange={(e) => setProductList(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               )}
-              <input type="text" placeholder="Elemen Pendukung (e.g. Ornamen, Latar Belakang Bersih)" value={supportingElements} onChange={(e) => setSupportingElements(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+              <input type="text" placeholder="Elemen Tambahan (e.g. Pencahayaan lembut, tanpa teks)" value={supportingElements} onChange={(e) => setSupportingElements(e.target.value)} className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
             </div>
 
             {/* 4. SPESIFIKASI & REFERENSI */}
@@ -362,11 +343,11 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                   <option value="Landscape">Landscape</option>
                   <option value="Square">Square</option>
                 </select>
-                <input type="text" placeholder={designCategory === 'Banner' ? "Ukuran Banner (e.g. 300x100)" : "Ukuran Kertas (e.g. A4)"} value={bannerSize} onChange={(e) => setBannerSize(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                <input type="text" placeholder="Ukuran / Resolusi" value={bannerSize} onChange={(e) => setBannerSize(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <input type="text" placeholder="Warna Dominan (e.g. Blue, Maroon, White)" value={colorPalette} onChange={(e) => setColorPalette(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
-                <input type="text" placeholder="Tema Desain (e.g. Flat Vector Art)" value={themeStyle} onChange={(e) => setThemeStyle(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                <input type="text" placeholder="Warna Dominan (e.g. Pink, Grey)" value={colorPalette} onChange={(e) => setColorPalette(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
+                <input type="text" placeholder="Tema Desain" value={themeStyle} onChange={(e) => setThemeStyle(e.target.value)} className="p-2 bg-slate-900 border border-slate-700 rounded outline-none" />
               </div>
 
               {/* Upload Box dengan Tombol Hapus */}
@@ -374,7 +355,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
                 {!imagePreview ? (
                   <>
                     <input type="file" accept="image/*" onChange={(e) => handleFileChange(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
-                    <p className="text-slate-400 py-2">Klik / Drag / Paste (Ctrl+V) foto referensi ke sini</p>
+                    <p className="text-slate-400 py-2">Klik / Drag / Paste (Ctrl+V) foto referensi target ke sini</p>
                   </>
                 ) : (
                   <div className="space-y-2">
@@ -398,11 +379,11 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
             {/* 5. PERINTAH KHUSUS */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
               <h2 className="font-bold text-blue-400 uppercase tracking-wider">5. Perintah Khusus</h2>
-              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Ambil data dan gambar dari referensi" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
+              <textarea rows="2" value={specialNotes} onChange={(e) => setSpecialNotes(e.target.value)} placeholder="E.g. Ubah foto asli menjadi ilustrasi vektor tunggal yang mulus" className="w-full p-2 bg-slate-900 border border-slate-700 rounded outline-none"></textarea>
             </div>
 
             <button onClick={generatePrompt} className={`w-full py-2.5 font-bold text-white rounded transition shadow-lg ${designCategory === 'Banner' ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/30' : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/30'}`}>
-              Generate {designCategory === 'Banner' ? 'Banner' : 'Vector Portrait'} JSON Prompt →
+              Generate {designCategory === 'Banner' ? 'Banner' : 'Single Vector Portrait'} JSON Prompt →
             </button>
           </div>
 
@@ -419,7 +400,7 @@ Generate the output ONLY as a structured JSON object with no opening or closing 
               {isLoading ? (
                 <div className="text-center py-20 text-xs text-slate-400 space-y-2">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto"></div>
-                  <p>Gemini sedang menyusun Professional English JSON Prompt...</p>
+                  <p>Gemini sedang menyusun Single Vector Portrait Prompt...</p>
                 </div>
               ) : (
                 <pre className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-[11px] text-emerald-400 font-mono overflow-x-auto max-h-[600px] whitespace-pre-wrap">
